@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <select name="Grafieksoort" id="graphDropdown">
+    <!-- <option value="barChartGroup">Bar Chart Grouped</option> -->
+    <!-- <option value="barChartStack">Bar Chart Stacked</option> -->
+    <option value="ColumnChart">Column Chart</option>
+    <!-- <option value="ColumnChartGrouped">Column Chart Grouped</option> -->
+    <!-- <option value="ColumnChartStacked">Column Chart Stacked</option> -->
+    <!-- <option value="lineChart">Line Chart</option> -->
+    <!-- <option value="pieChart">Pie Chart</option> -->
+  </select>
+  
+  <select name="ColorPalette" id="colorPaletteDropdown">
+    <option value="op3">Op3</option>
+    <option value="stories">Stories</option>
+    <option value="nieuws">Nieuws</option>
+  </select>
+  
+  <select name="AspectRatio" id="aspectRatioDropdown">
+    <option value="landscape">Landscape</option>
+    <option value="portrait">Portrait</option>
+  </select>
+  
+  <button id="create">Create</button>
+  
+  <script src="./Lib/CSInterface.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "op3": {
+    "name": "Op3",
+    "barColor": "#ff6e6e",
+    "lineColor": "#ffffff",
+    "textColor": "#ffffff",
+    "backgroundColor": "#1e1e1e"
+  },
+  "stories": {
+    "name": "Stories",
+    "barColor": "#ffffff",
+    "lineColor": "#ffffff",
+    "textColor": "#ffffff",
+    "backgroundColor": "#9463E5"
+  },
+  "nieuws": {
+    "name": "Nieuws",
+    "barColor": "#E61E14",
+    "lineColor": "#1e1e1e",
+    "textColor": "#1e1e1e",
+    "backgroundColor": "#ffffff"
+  }
+} 

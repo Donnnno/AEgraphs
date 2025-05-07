@@ -1,0 +1,22 @@
+{
+  "landscape": {
+    "name": "Landscape",
+    "width": 1920,
+    "height": 1080,
+    "graphLength": 1352,
+    "graphHeight": 510,
+    "barDistance": 200,
+    "barWidth": 100,
+    "basePosition": [348, 790]
+  },
+  "portrait": {
+    "name": "Portrait",
+    "width": 1080,
+    "height": 1920,
+    "graphLength": 760,
+    "graphHeight": 707,
+    "barDistance": 200,
+    "barWidth": 100,
+    "basePosition": [180,1210]
+  }
+} 

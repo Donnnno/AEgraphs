@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExtensionManifest
+  Version="12.0"
+  ExtensionBundleId="nl.onnno.aegraphs"
+  ExtensionBundleVersion="0.1"
+  ExtensionBundleName="grafieken">
+
+  <ExtensionList>
+    <Extension Id="nl.onnno.aegraphs" />
+    <Extension Id="nl.onnno.aegraphs.reload" />
+  </ExtensionList>
+
+  <ExecutionEnvironment>
+    <HostList>
+      <Host Name="AEFT" Version="[13.0,99.9]" />
+    </HostList>
+    <LocaleList>
+      <Locale Code="All" />
+    </LocaleList>
+    <RequiredRuntimeList>
+      <RequiredRuntime Name="CSXS" Version="12.0" />
+    </RequiredRuntimeList>
+  </ExecutionEnvironment>
+
+  <DispatchInfoList>
+    <Extension Id="nl.onnno.aegraphs">
+      <DispatchInfo>
+        <Resources>
+          <MainPath>./index.html</MainPath>
+        </Resources>
+        <Lifecycle>
+          <AutoVisible>true</AutoVisible>
+        </Lifecycle>
+        <UI>
+          <Type>Panel</Type>
+          <Menu>AEGraphs</Menu>
+          <Geometry>
+            <Size>
+              <Height>300</Height>
+              <Width>300</Width>
+            </Size>
+          </Geometry>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+
+  </DispatchInfoList>
+</ExtensionManifest>

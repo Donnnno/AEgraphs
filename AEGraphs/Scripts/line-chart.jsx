@@ -263,6 +263,14 @@ function createLineChart() {
         lineAStroke.property("ADBE Vector Stroke Color").setValue(hexToRgb(colorPalette.barColor));
         lineAStroke.property("ADBE Vector Stroke Line Cap").setValue(2); 
 
+        // Add roughen edges effect for Stories style
+        if (colorPalette.name === "Stories") {
+            var roughenEdges = shapeLineA.property("ADBE Effect Parade").addProperty("ADBE Roughen Edges");
+            roughenEdges.property("ADBE Roughen Edges-0002").setValue(3.7);
+            roughenEdges.property("ADBE Roughen Edges-0003").setValue(2);
+            roughenEdges.property("ADBE Roughen Edges-0005").setValue(10);
+        }
+        
         // Create puntA 1 separately
         var shapePuntA1 = newComp.layers.addShape();
         shapePuntA1.name = "puntA 1";

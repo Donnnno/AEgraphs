@@ -264,6 +264,14 @@ function createColumnChart() {
         sliderBarCalc1.name = "Calculation";
         sliderBarCalc1.property("ADBE Slider Control-0001").expression = "maxVal = thisComp.layer(\"Controller\").effect(\"Y-As - Max waarde\")(\"Slider\");\nminVal = thisComp.layer(\"Controller\").effect(\"Y-As - Min waarde\")(\"Slider\");\ninput = effect(\"Input 1\")(\"Slider\");\nrange = maxVal - minVal;\nnormInput = (input - minVal) / range;\ny = normInput * 100;\n[y]";
 
+        // Add roughen edges effect for Stories style
+        if (colorPalette.name === "Stories") {
+            var roughenEdges = shapeBalk1.property("ADBE Effect Parade").addProperty("ADBE Roughen Edges");
+            roughenEdges.property("ADBE Roughen Edges-0002").setValue(3.7);
+            roughenEdges.property("ADBE Roughen Edges-0003").setValue(2);
+            roughenEdges.property("ADBE Roughen Edges-0005").setValue(10);
+        }
+
         var barsToCreate = Math.max(2, numBars);
 
         for (var i = 1; i < barsToCreate; i++) {
@@ -294,6 +302,14 @@ function createColumnChart() {
             var sliderBarCalc = shapeBar.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
             sliderBarCalc.name = "Calculation";
             sliderBarCalc.property("ADBE Slider Control-0001").expression = "maxVal = thisComp.layer(\"Controller\").effect(\"Y-As - Max waarde\")(\"Slider\");\nminVal = thisComp.layer(\"Controller\").effect(\"Y-As - Min waarde\")(\"Slider\");\ninput = effect(\"Input 1\")(\"Slider\");\nrange = maxVal - minVal;\nnormInput = (input - minVal) / range;\ny = normInput * 100;\n[y]";
+
+            // Add roughen edges effect for Stories style
+            if (colorPalette.name === "Stories") {
+                var roughenEdges2 = shapeBar.property("ADBE Effect Parade").addProperty("ADBE Roughen Edges");
+                roughenEdges2.property("ADBE Roughen Edges-0002").setValue(3.7);
+                roughenEdges2.property("ADBE Roughen Edges-0003").setValue(2);
+                roughenEdges2.property("ADBE Roughen Edges-0005").setValue(10);
+            }
         }
 
         // Create Lijn

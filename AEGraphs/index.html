@@ -2,16 +2,17 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="Style/style.css">
 </head>
 <body>
   <select name="Grafieksoort" id="graphDropdown">
+    <option value="barChart">Bar Chart</option>
     <!-- <option value="barChartGroup">Bar Chart Grouped</option> -->
     <!-- <option value="barChartStack">Bar Chart Stacked</option> -->
-    <option value="ColumnChart">Column Chart</option>
+    <option value="columnChart">Column Chart</option>
     <!-- <option value="ColumnChartGrouped">Column Chart Grouped</option> -->
     <!-- <option value="ColumnChartStacked">Column Chart Stacked</option> -->
-    <!-- <option value="lineChart">Line Chart</option> -->
+    <option value="lineChart">Line Chart</option>
     <!-- <option value="pieChart">Pie Chart</option> -->
   </select>
   
@@ -27,8 +28,13 @@
   </select>
   
   <button id="create">Create</button>
-  
   <script src="./Lib/CSInterface.js"></script>
-  <script src="./main.js"></script>
+  <script src="./Lib/config.js"></script>
+  <script src="./Lib/main.js"></script>
+  <div id="version" title="Check for updates">
+    <a href="#" id="versionLink" onclick="window.cep.util.openURLInDefaultBrowser('https://github.com/Donnnno/AEgraphs/releases'); return false;">v0.1</a>
+    <button id="checkUpdate" onclick="checkForUpdates()">↻</button>
+    <div id="versionTooltip"></div>
+  </div>
 </body>
 </html>

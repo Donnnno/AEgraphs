@@ -158,6 +158,24 @@ function createColumnChart() {
         horRepeaters.property("ADBE Vector Repeater Copies").expression = "thisComp.layer(\"Controller\").effect(\"Lijnen - Aantal\")(\"Slider\");";
         horRepeaters.property("ADBE Vector Repeater Transform").property("Position").expression = "c = content(\"Horizontale lijnen\").content(\"Repeater 1\").copies -1;\n[0, thisComp.layer(\"Controller\").effect(\"Lijnen - Hoogte\")(\"Slider\")/c*-1]";
 
+        var groupVertLines = contentsLines.addProperty("ADBE Vector Group");
+        groupVertLines.name = "Verticale lijnen";
+        var vertLine = groupVertLines.property("Contents").addProperty("ADBE Vector Group");
+        vertLine.name = "lijn";
+        vertLine.property("Transform").property("Position").expression = "thisComp.layer(\"Balk 1\").transform.position";
+
+        var vertLinePath = vertLine.property("Contents").addProperty("ADBE Vector Shape - Group");
+        vertLinePath.property("Path").expression = "createPath(points = [[0,0],[0,15]], inTangents = [], outTangents = [], is_closed = false)";
+
+        var vertLineStroke = vertLine.property("Contents").addProperty("ADBE Vector Graphic - Stroke");
+        vertLineStroke.property("ADBE Vector Stroke Width").setValue(2);
+        vertLineStroke.property("ADBE Vector Stroke Color").setValue(hexToRgb(colorPalette.lineColor));
+        
+        var vertRepeaters = groupVertLines.property("Contents").addProperty("ADBE Vector Filter - Repeater");
+        vertRepeaters.property("ADBE Vector Repeater Copies").expression = "var targetName = \"Balk\";var balkAantal = 0;\tfor (var i = 1; i <= thisComp.numLayers; i++) {\t\tif (thisComp.layer(i).name.indexOf(targetName) !== -1) {\t\t\tbalkAantal++;\t\t}\t}balkAantal;[balkAantal]";
+        vertRepeaters.property("ADBE Vector Repeater Transform").property("Position").expression = "x = thisComp.layer(\"Controller\").effect(\"Balk - Afstand\")(\"Slider\");y = value[1];[x,y]";
+
+
         // X AXIS TEXT
         var xAxisText = newComp.layers.addText();
         xAxisText.name = "X-As";
@@ -240,7 +258,7 @@ function createColumnChart() {
 
         var sliderBarInput1 = shapeBalk1.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderBarInput1.name = "Input 1";
-        sliderBarInput1.property("ADBE Slider Control-0001").setValue(barValues[0] || 500);
+        sliderBarInput1.property("ADBE Slider Control-0001").setValueAtTime(20/newComp.frameRate, barValues[0] || 500);
 
         var sliderBarCalc1 = shapeBalk1.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderBarCalc1.name = "Calculation";
@@ -271,7 +289,7 @@ function createColumnChart() {
             // Create sliders for this bar
             var sliderBarInput = shapeBar.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
             sliderBarInput.name = "Input 1";
-            sliderBarInput.property("ADBE Slider Control-0001").setValue(barValues[i] || 500);
+            sliderBarInput.property("ADBE Slider Control-0001").setValueAtTime(20/newComp.frameRate, barValues[i] || 500);
     
             var sliderBarCalc = shapeBar.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
             sliderBarCalc.name = "Calculation";

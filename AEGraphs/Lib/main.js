@@ -1,18 +1,14 @@
 var csInterface = new CSInterface();
+console.log('Script loaded, waiting for DOMContentLoaded');
 
 document.addEventListener('DOMContentLoaded', function () {
+
+
   var createButton = document.querySelector('#create');
 
   createButton.addEventListener('click', function () {
     createGraph();
   });
-
-  // Add import button
-  // var importButton = document.createElement('button');
-  // importButton.id = 'importData';
-  // importButton.textContent = 'Import Data';
-  // importButton.style.marginTop = '10px';
-  // document.body.appendChild(importButton);
 
   // Add checkbox container
   var checkboxContainer = document.createElement('div');
@@ -95,11 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Check for updates when the panel loads
-  checkForUpdates();
-  
-  // Check for updates every 24 hours
-  setInterval(checkForUpdates, 24 * 60 * 60 * 1000);
 });
 
 function loadColorPalette(paletteName) {
@@ -161,9 +152,10 @@ async function createGraph() {
     const aspectRatioConfig = await loadAspectRatio(aspectRatio);
     
     let script = '';
+    const escapedCsvData = csvData.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+    
     switch(graphType) {
-      case 'ColumnChart':
-        const escapedCsvData = csvData.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+      case 'columnChart':
         script = 'var scriptFile = new File("' + csInterface.getSystemPath(SystemPath.EXTENSION) + '/scripts/column-chart.jsx");\n' +
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
@@ -180,6 +172,10 @@ async function createGraph() {
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
           'scriptFile.close();\n' +
+          'var csvData = "' + escapedCsvData + '";\n' +
+          'var reverseData = ' + reverseData + ';\n' +
+          'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
+          'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'eval(scriptContent);\n' +
           'createLineChart();';
         break;
@@ -188,6 +184,10 @@ async function createGraph() {
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
           'scriptFile.close();\n' +
+          'var csvData = "' + escapedCsvData + '";\n' +
+          'var reverseData = ' + reverseData + ';\n' +
+          'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
+          'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'eval(scriptContent);\n' +
           'createPieChart();';
         break;
@@ -196,6 +196,10 @@ async function createGraph() {
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
           'scriptFile.close();\n' +
+          'var csvData = "' + escapedCsvData + '";\n' +
+          'var reverseData = ' + reverseData + ';\n' +
+          'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
+          'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'eval(scriptContent);\n' +
           'createBarChart();';
         break;
@@ -204,6 +208,10 @@ async function createGraph() {
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
           'scriptFile.close();\n' +
+          'var csvData = "' + escapedCsvData + '";\n' +
+          'var reverseData = ' + reverseData + ';\n' +
+          'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
+          'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'eval(scriptContent);\n' +
           'createBarChartGrouped();';
         break;
@@ -212,6 +220,10 @@ async function createGraph() {
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
           'scriptFile.close();\n' +
+          'var csvData = "' + escapedCsvData + '";\n' +
+          'var reverseData = ' + reverseData + ';\n' +
+          'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
+          'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'eval(scriptContent);\n' +
           'createBarChartStacked();';
         break;
@@ -220,6 +232,10 @@ async function createGraph() {
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
           'scriptFile.close();\n' +
+          'var csvData = "' + escapedCsvData + '";\n' +
+          'var reverseData = ' + reverseData + ';\n' +
+          'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
+          'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'eval(scriptContent);\n' +
           'createColumnChartGrouped();';
         break;
@@ -228,6 +244,10 @@ async function createGraph() {
           'scriptFile.open("r");\n' +
           'var scriptContent = scriptFile.read();\n' +
           'scriptFile.close();\n' +
+          'var csvData = "' + escapedCsvData + '";\n' +
+          'var reverseData = ' + reverseData + ';\n' +
+          'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
+          'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'eval(scriptContent);\n' +
           'createColumnChartStacked();';
         break;
@@ -239,76 +259,40 @@ async function createGraph() {
   }
 }
 
-// Add update check functionality
+// Update checker
 async function checkForUpdates() {
-  try {
-    const currentVersion = '0.1'; // This should match ExtensionBundleVersion in manifest.xml
-    const response = await fetch('https://api.github.com/repos/Donnnno/AEgraphs/releases/latest');
-    const data = await response.json();
-    const latestVersion = data.tag_name.replace('v', ''); // Remove 'v' prefix if present
-    
-    if (compareVersions(latestVersion, currentVersion) > 0) {
-      showUpdateNotification(latestVersion);
+    try {
+        // First get all releases to find the latest one including pre-releases
+        const response = await fetch('https://api.github.com/repos/Donnnno/AEgraphs/releases', {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                'Authorization': `token ${config.githubToken}`
+            }
+        });
+        const releases = await response.json();
+        
+        // Get the first release (most recent) from the array
+        if (releases && releases.length > 0) {
+            const latestRelease = releases[0];
+            const latestVersion = latestRelease.tag_name.replace('v', '');
+            const currentVersion = document.getElementById('versionLink').textContent.replace('v', '');
+            
+            // Convert versions to numbers for proper comparison
+            const latestVersionNum = parseFloat(latestVersion);
+            const currentVersionNum = parseFloat(currentVersion);
+            
+            if (latestVersionNum > currentVersionNum) {
+                const versionDiv = document.getElementById('version');
+                versionDiv.classList.add('update-available');
+                const preReleaseText = latestRelease.prerelease ? ' (pre-release)' : '';
+                const tooltip = document.getElementById('versionTooltip');
+                tooltip.textContent = `New version available: v${latestVersion}${preReleaseText}`;
+            }
+        }
+    } catch (error) {
+        console.error('Failed to check for updates:', error);
     }
-  } catch (error) {
-    console.error('Error checking for updates:', error);
-  }
 }
 
-function compareVersions(v1, v2) {
-  const v1Parts = v1.split('.').map(Number);
-  const v2Parts = v2.split('.').map(Number);
-  
-  for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
-    const v1Part = v1Parts[i] || 0;
-    const v2Part = v2Parts[i] || 0;
-    
-    if (v1Part > v2Part) return 1;
-    if (v1Part < v2Part) return -1;
-  }
-  
-  return 0;
-}
-
-function showUpdateNotification(latestVersion) {
-  const notification = document.createElement('div');
-  notification.style.position = 'fixed';
-  notification.style.top = '10px';
-  notification.style.right = '10px';
-  notification.style.backgroundColor = '#4CAF50';
-  notification.style.color = 'white';
-  notification.style.padding = '10px';
-  notification.style.borderRadius = '4px';
-  notification.style.zIndex = '1000';
-  notification.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-  
-  const message = document.createElement('span');
-  message.textContent = `Update available: v${latestVersion}`;
-  
-  const downloadLink = document.createElement('a');
-  downloadLink.href = 'https://github.com/Donnnno/AEgraphs/releases/latest';
-  downloadLink.textContent = 'Download';
-  downloadLink.style.color = 'white';
-  downloadLink.style.marginLeft = '10px';
-  downloadLink.style.textDecoration = 'underline';
-  downloadLink.target = '_blank';
-  
-  const closeButton = document.createElement('button');
-  closeButton.textContent = '×';
-  closeButton.style.float = 'right';
-  closeButton.style.marginLeft = '10px';
-  closeButton.style.background = 'none';
-  closeButton.style.border = 'none';
-  closeButton.style.color = 'white';
-  closeButton.style.cursor = 'pointer';
-  closeButton.style.fontSize = '16px';
-  
-  closeButton.addEventListener('click', () => {
-    notification.remove();
-  });
-  
-  notification.appendChild(message);
-  notification.appendChild(downloadLink);
-  notification.appendChild(closeButton);
-  document.body.appendChild(notification);
-}
+// Check for updates when the panel loads
+document.addEventListener('DOMContentLoaded', checkForUpdates);

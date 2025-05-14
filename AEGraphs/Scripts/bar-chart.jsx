@@ -73,6 +73,15 @@ function createBarChart() {
         var rectGroup = contents.addProperty("ADBE Vector Group");
         rectGroup.name = "Null";
 
+        var rect = rectGroup.property("Contents").addProperty("ADBE Vector Shape - Rect");
+        rect.property("Size").setValue([100,100]);
+
+        var strokeRect = rectGroup.property("Contents").addProperty("ADBE Vector Graphic - Stroke");
+        strokeRect.property("ADBE Vector Stroke Color").setValue(hexToRgb(colorPalette.controllerColor));
+        strokeRect.property("ADBE Vector Stroke Width").setValue(1);
+        var strokeRectDash = strokeRect.property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Dash 1");
+        strokeRectDash.setValue(5);
+        
         // Controller controls 
 
         var sliderAmount = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");

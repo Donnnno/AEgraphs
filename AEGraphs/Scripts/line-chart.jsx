@@ -170,7 +170,7 @@ function createLineChart() {
         groupVertLines.name = "Verticale lijnen";
         var vertLine = groupVertLines.property("Contents").addProperty("ADBE Vector Group");
         vertLine.name = "lijn";
-        vertLine.property("Transform").property("Position").expression = "thisComp.layer(\"Balk 1\").transform.position";
+        vertLine.property("Transform").property("Position").expression = "x = thisComp.layer(\"puntA 1\").transform.position[0];\ny = value[1];\n\n[x,y]";
 
         var vertLinePath = vertLine.property("Contents").addProperty("ADBE Vector Shape - Group");
         vertLinePath.property("Path").expression = "createPath(points = [[0,0],[0,15]], inTangents = [], outTangents = [], is_closed = false)";
@@ -180,7 +180,7 @@ function createLineChart() {
         vertLineStroke.property("ADBE Vector Stroke Color").setValue(hexToRgb(colorPalette.lineColor));
         
         var vertRepeaters = groupVertLines.property("Contents").addProperty("ADBE Vector Filter - Repeater");
-        vertRepeaters.property("ADBE Vector Repeater Copies").expression = "var targetName = \"Balk\";var balkAantal = 0;\tfor (var i = 1; i <= thisComp.numLayers; i++) {\t\tif (thisComp.layer(i).name.indexOf(targetName) !== -1) {\t\t\tbalkAantal++;\t\t}\t}balkAantal;[balkAantal]";
+        vertRepeaters.property("ADBE Vector Repeater Copies").expression = "var targetName = \"puntA\";var balkAantal = 0;\tfor (var i = 1; i <= thisComp.numLayers; i++) {\t\tif (thisComp.layer(i).name.indexOf(targetName) !== -1) {\t\t\tbalkAantal++;\t\t}\t}balkAantal;[balkAantal]";
         vertRepeaters.property("ADBE Vector Repeater Transform").property("Position").expression = "x = thisComp.layer(\"Controller\").effect(\"Balk - Afstand\")(\"Slider\");y = value[1];[x,y]";
 
 
@@ -206,16 +206,16 @@ function createLineChart() {
 
         // Set up position
         xAxisText.property("Transform").property("Position").dimensionsSeparated = true;
-        xAxisText.property("Transform").property("X Position").expression = "thisComp.layer(\"Balk 1\").transform.position[0]";
+        xAxisText.property("Transform").property("X Position").expression = "thisComp.layer(\"puntA 1\").transform.position[0]";
         xAxisText.property("Transform").property("Y Position").setValue(55);
 
         // Set up text expression
-        xAxisText.property("Source Text").expression = "const xAs = thisComp.layer(\"Controller\").effect(\"X-As\")(\"Menu\").value;\nconst base = thisComp.layer(\"Controller\").effect(\"X-As - Startgetal\")(\"Slider\");\nconst increment = thisComp.layer(\"Controller\").effect(\"X-As - Toename\")(\"Slider\");\nconst step1 = thisComp.layer(\"Controller\").effect(\"X-As - Stap overslaan na\")(\"Slider\");\nconst step2 = thisComp.layer(\"Controller\").effect(\"X-As - Stap\")(\"Slider\");\nconst targetName = \"Balk\";\nlet balkAantal = 0;\n\nfor (let i = 1; i <= thisComp.numLayers; i++) {\n    if (thisComp.layer(i).name.indexOf(targetName) !== -1) {\n        balkAantal++;\n    }\n}\nbalkAantal;\n\nlet aantalLabels = Math.ceil(balkAantal / step2);\n\nif (xAs === 1) {\n    var text = \"\";\n    \n    if (balkAantal > step1) {\n        for (var j = 0; j < aantalLabels; j++){\n            text += (base + (increment * step2 * j)).toString() + \"\\n\";\n        }\n    } else {\n        for (var i = 0; i < balkAantal; i++) { \n            text += (base + (increment * i)).toString() + \"\\n\";\n        }\n    }\n    text.trim();\n} else {\n    var text = sourceText;\n}";
+        xAxisText.property("Source Text").expression = "const xAs = thisComp.layer(\"Controller\").effect(\"X-As\")(\"Menu\").value;\nconst base = thisComp.layer(\"Controller\").effect(\"X-As - Startgetal\")(\"Slider\");\nconst increment = thisComp.layer(\"Controller\").effect(\"X-As - Toename\")(\"Slider\");\nconst step1 = thisComp.layer(\"Controller\").effect(\"X-As - Stap overslaan na\")(\"Slider\");\nconst step2 = thisComp.layer(\"Controller\").effect(\"X-As - Stap\")(\"Slider\");\nconst targetName = \"puntA\";\nlet balkAantal = 0;\n\nfor (let i = 1; i <= thisComp.numLayers; i++) {\n    if (thisComp.layer(i).name.indexOf(targetName) !== -1) {\n        balkAantal++;\n    }\n}\nbalkAantal;\n\nlet aantalLabels = Math.ceil(balkAantal / step2);\n\nif (xAs === 1) {\n    var text = \"\";\n    \n    if (balkAantal > step1) {\n        for (var j = 0; j < aantalLabels; j++){\n            text += (base + (increment * step2 * j)).toString() + \"\\n\";\n        }\n    } else {\n        for (var i = 0; i < balkAantal; i++) { \n            text += (base + (increment * i)).toString() + \"\\n\";\n        }\n    }\n    text.trim();\n} else {\n    var text = sourceText;\n}";
 
         // Text animator
         var textAnimator = xAxisText.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
         var textAnimatorProps = textAnimator.property("ADBE Text Animator Properties").addProperty("ADBE Text Line Spacing");
-        textAnimatorProps.expression = "b = thisComp.layer(\"Controller\").effect(\"Balk - Afstand\")(\"Slider\");\ny = value[1];\ns = thisComp.layer(\"Controller\").effect(\"X-As - Stap overslaan na\")(\"Slider\");\ns2 = thisComp.layer(\"Controller\").effect(\"X-As - Stap\")(\"Slider\")\nvar targetName = \"Balk\";\nvar balkAantal = 0;\n	for (var i = 1; i <= thisComp.numLayers; i++) {\nif (thisComp.layer(i).name.indexOf(targetName)\n!== -1) {\nbalkAantal++;\n}\n}\nbalkAantal;\nif (balkAantal > s) {\nx = b * s2;\n}\nelse {\nx = b;\n}\n[x,y]";
+        textAnimatorProps.expression = "b = thisComp.layer(\"Controller\").effect(\"Balk - Afstand\")(\"Slider\");\ny = value[1];\ns = thisComp.layer(\"Controller\").effect(\"X-As - Stap overslaan na\")(\"Slider\");\ns2 = thisComp.layer(\"Controller\").effect(\"X-As - Stap\")(\"Slider\")\nvar targetName = \"puntA\";\nvar balkAantal = 0;\n	for (var i = 1; i <= thisComp.numLayers; i++) {\nif (thisComp.layer(i).name.indexOf(targetName)\n!== -1) {\nbalkAantal++;\n}\n}\nbalkAantal;\nif (balkAantal > s) {\nx = b * s2;\n}\nelse {\nx = b;\n}\n[x,y]";
 
         // Y AXIS TEXT
         var yAxisText = newComp.layers.addText();

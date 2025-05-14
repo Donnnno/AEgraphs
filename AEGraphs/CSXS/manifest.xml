@@ -2,11 +2,11 @@
 <ExtensionManifest
   Version="12.0"
   ExtensionBundleId="nl.onnno.aegraphs"
-  ExtensionBundleVersion="0.1"
+  ExtensionBundleVersion="0.3"
   ExtensionBundleName="AEGraphs">
 
   <ExtensionList>
-    <Extension Id="nl.onnno.aegraphs" Version="0.1" />
+    <Extension Id="nl.onnno.aegraphs" Version="0.3" />
   </ExtensionList>
 
   <ExecutionEnvironment>

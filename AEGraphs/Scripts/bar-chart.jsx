@@ -20,6 +20,13 @@ function createBarChart() {
     app.beginUndoGroup("New Graph");
 
     try {
+        // Polyfill for String.trim() for older ExtendScript versions
+        if (!String.prototype.trim) {
+            String.prototype.trim = function () {
+                return this.replace(/^\s+|\s+$/g, '');
+            };
+        }
+
         // Process CSV data
         var lines = csvData.split('\n');
         if (reverseData) {
@@ -106,15 +113,16 @@ function createBarChart() {
     
         var dropdownYaxis = shapeController.property("ADBE Effect Parade").addProperty("ADBE Dropdown Control");
         var dropdownYaxisUpdate = dropdownYaxis.property(1).setPropertyParameters(["Waarde", "Woorden"]);
+        dropdownYaxisUpdate.setValue(2);
         dropdownYaxisUpdate.propertyGroup(1).name = "Y-As";
 
         var sliderMinVal = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderMinVal.name = "X-As - Min waarde";
-        sliderMinVal.property("ADBE Slider Control-0001").setValue(0);
+        sliderMinVal.property("ADBE Slider Control-0001").setValue(minVal || 0);
     
         var sliderMaxVal = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderMaxVal.name = "X-As - Max waarde";
-        sliderMaxVal.property("ADBE Slider Control-0001").setValue(1000);
+        sliderMaxVal.property("ADBE Slider Control-0001").setValue(maxVal || 1000);
     
         var sliderDecimalY = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderDecimalY.name = "X-As - Decimalen";
@@ -244,6 +252,7 @@ function createBarChart() {
         yAxisText.property("Transform").property("Y Position").expression = "thisComp.layer(\"Balk 1\").transform.position[1]";
         yAxisText.property("Transform").property("Anchor Point").setValue([0, -11]);
 
+        yAxisText.property("Source Text").setValue("jan\nfeb");
         yAxisText.property("Source Text").expression = "var yAs = thisComp.layer(\"Controller\").effect(\"Y-As\")(\"Menu\").value;\nvar base = thisComp.layer(\"Controller\").effect(\"Y-As - Startgetal\")(\"Slider\");\nvar increment = thisComp.layer(\"Controller\").effect(\"Y-As - Toename\")(\"Slider\");\nvar step1 = thisComp.layer(\"Controller\").effect(\"Y-As - Stap overslaan na\")(\"Slider\");\nvar step2 = thisComp.layer(\"Controller\").effect(\"Y-As - Stap\")(\"Slider\");\nvar targetName = \"Balk\";\nvar balkAantal = 0;\n\tfor (var i = 1; i <= thisComp.numLayers; i++) {\n\t\tif (thisComp.layer(i).name.indexOf(targetName) !== -1) {\n\t\t\tbalkAantal++;\n\t\t}\n\t}balkAantal;\nvar aantalLabels = Math.ceil(balkAantal / step2);\nif (yAs === 1) {\n\tvar text = \"\";\n\t\tif (balkAantal > step1) {\n\t\t\tfor (var j = 0; j < aantalLabels; j++){\n\t\t\t\ttext += (base + (increment * step2 * j)).toString() + \"\\n\";\n\t\t\t}\n\t\t} else {\n\t\t\tfor (var i = 0; i < balkAantal; i++) { \n\t\t\t\ttext += (base + (increment * i)).toString() + \"\\n\";\n\t\t\t}\n\t\t}\n\ttext.trim(); \n} else {\n\tvar text = sourceText;\n}";
 
         var yAxisTextAnimator = yAxisText.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
@@ -364,7 +373,7 @@ function createBarChart() {
             titleTextDocument.font = "Effra Bold";
         }
         titleTextDocument.justification = ParagraphJustification.LEFT_JUSTIFY;
-        titleTextDocument.text = "Grafiek titel";
+        titleTextDocument.text = graphTitle || "Grafiektitel";
         titleText.property("Source Text").setValue(titleTextDocument);
 
         titleText.property("Transform").property("Position").setValue([-41, -98]);
@@ -388,7 +397,7 @@ function createBarChart() {
             subtitleTextDocument.font = "Effra Regular";
         }
         subtitleTextDocument.justification = ParagraphJustification.LEFT_JUSTIFY;
-        subtitleTextDocument.text = "Ondertitel";
+        subtitleTextDocument.text = graphTitle || "Ondertitel";
         subtitleText.property("Source Text").setValue(subtitleTextDocument);
         subtitleText.property("Transform").property("Position").setValue([-41, 0]);
         subtitleText.property("Transform").property("Position").expression = "Yas = thisComp.layer(\"Y-As\").sourceRectAtTime().width\nt = thisComp.layer(\"Grafiektitel\").transform.position[1]+60;\nx = value[0] - Yas;\ny = value[1];\n[x,y+t]";
@@ -411,7 +420,7 @@ function createBarChart() {
             sourceTextDocument.font = "Effra Regular";
         }
         sourceTextDocument.justification = ParagraphJustification.RIGHT_JUSTIFY;
-        sourceTextDocument.text = "Bron: NOS";
+        sourceTextDocument.text = sourceTitle || "bron: NOS";
         sourceText.property("Source Text").setValue(sourceTextDocument);
         sourceText.property("Transform").property("Position").setValue([0, 0]);
         sourceText.property("Transform").property("Position").expression = "x = value[0] + thisComp.layer(\"Controller\").effect(\"Lijnen - Lengte\")(\"Slider\");\ny = value[1] + thisComp.layer(\"Grafiektitel\").transform.position[1];\n[x,y]";

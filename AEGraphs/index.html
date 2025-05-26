@@ -27,12 +27,34 @@
     <option value="portrait">Portrait</option>
   </select>
   
+  <div class="inputContainer">
+    <input class="First" type="text" id="graphTitle" placeholder="Grafiektitel" value="">
+    <input class="Sec" type="text" id="subTitle" placeholder="Ondertitel" value="">
+    <input class="Third" type="text" id="sourceTitle" placeholder="bron: " value="bron: ">
+  </div>
+
+  <div id="mainContainer"></div>
+
+  <div id="reverseCheckboxContainer" class="checkboxContainer">
+    <input type="checkbox" id="reverseCheckbox" class="checkbox">
+    <label for="reverseCheckbox">Reverse data</label>
+  </div>
+  <hr>
+  <div class="inputContainer">
+    <label for="minVal">Minimale waarde</label>
+    <label for="maxVal">Maximale waarde</label>
+    <input class="Sec" type="text" id="minVal" placeholder="0" value="">
+    <input class="Third" type="text" id="maxVal" placeholder="1000" value="">
+  </div>
+
   <button id="create">Create</button>
+
+
   <script src="./Lib/CSInterface.js"></script>
   <script src="./Lib/config.js"></script>
   <script src="./Lib/main.js"></script>
   <div id="version" title="Check for updates">
-    <a href="#" id="versionLink" onclick="window.cep.util.openURLInDefaultBrowser('https://github.com/Donnnno/AEgraphs/releases'); return false;">v0.3</a>
+    <a href="#" id="versionLink" onclick="window.cep.util.openURLInDefaultBrowser('https://github.com/Donnnno/AEgraphs/releases'); return false;">v0.5</a>
     <button id="checkUpdate" onclick="checkForUpdates()" style="animation: none" onmousedown="this.style.animation='spin .4s ease'">↻</button>
     <style>
       @keyframes spin {

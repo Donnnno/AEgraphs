@@ -20,6 +20,13 @@ function createColumnChart() {
     app.beginUndoGroup("New Graph");
 
     try {
+        // Polyfill for String.trim() for older ExtendScript versions
+        if (!String.prototype.trim) {
+            String.prototype.trim = function () {
+                return this.replace(/^\s+|\s+$/g, '');
+            };
+        }
+
         // Process CSV data
         var lines = csvData.split('\n');
         if (reverseData) {
@@ -37,7 +44,7 @@ function createColumnChart() {
             return parseFloat(values[0]) || 0; // Get first column value as number
         });
 
-        var compName = "Column Chart";
+        var compName = "Bar Chart";
         var width = aspectRatio.width;
         var height = aspectRatio.height;
         var duration = 60;
@@ -110,11 +117,11 @@ function createColumnChart() {
 
         var sliderMinVal = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderMinVal.name = "Y-As - Min waarde";
-        sliderMinVal.property("ADBE Slider Control-0001").setValue(0);
+        sliderMinVal.property("ADBE Slider Control-0001").setValue(minVal || 0);
     
         var sliderMaxVal = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderMaxVal.name = "Y-As - Max waarde";
-        sliderMaxVal.property("ADBE Slider Control-0001").setValue(1000);
+        sliderMaxVal.property("ADBE Slider Control-0001").setValue(maxVal || 1000);
     
         var sliderDecimalY = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
         sliderDecimalY.name = "Y-As - Decimalen";

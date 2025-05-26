@@ -2,6 +2,14 @@ body {
     font-family: sans-serif;
     margin: 0;
     padding: 10px;
+    display: grid;
+    gap: 10px;
+    background-color: #000000;
+}
+
+hr {
+    border: 1px solid #4d4d4d;
+    margin: 10px 0;
 }
 
 select {
@@ -119,3 +127,45 @@ h1 {
     visibility: visible;
 }
 
+.inputContainer {  
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 10px;
+    grid-auto-flow: row;
+    grid-template-areas:
+    "First First"
+    "Sec Third";
+}
+
+.First { grid-area: First; }
+
+.Sec { grid-area: Sec; }
+
+.Third { grid-area: Third; }
+
+input[type="text"] {
+    font-family: monospace;
+    height:50px;
+    width: 100%;
+    padding: 10px;
+    background-color: #3d3d3d;
+    color: #c5c5c5;
+    border: 1px solid #4d4d4d;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {    
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+label {
+    color: #fff;
+    font-size: 16px;
+}
+
+.checkboxContainer {
+  margin-top: 10px;
+  display: block;
+}

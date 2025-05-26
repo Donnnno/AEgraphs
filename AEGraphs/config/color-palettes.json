@@ -4,20 +4,23 @@
     "barColor": "#ff6e6e",
     "lineColor": "#ffffff",
     "textColor": "#ffffff",
-    "backgroundColor": "#1e1e1e"
+    "backgroundColor": "#1e1e1e",
+    "controllerColor": "#ffff00"
   },
   "stories": {
     "name": "Stories",
     "barColor": "#ffffff",
     "lineColor": "#ffffff",
     "textColor": "#ffffff",
-    "backgroundColor": "#9463E5"
+    "backgroundColor": "#9463E5",
+    "controllerColor": "#ffff00"
   },
   "nieuws": {
     "name": "Nieuws",
     "barColor": "#E61E14",
     "lineColor": "#1e1e1e",
     "textColor": "#1e1e1e",
-    "backgroundColor": "#ffffff"
+    "backgroundColor": "#ffffff",
+    "controllerColor": "#ffff00"
   }
 } 

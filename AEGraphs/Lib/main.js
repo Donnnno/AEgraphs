@@ -2,38 +2,14 @@ var csInterface = new CSInterface();
 console.log('Script loaded, waiting for DOMContentLoaded');
 
 document.addEventListener('DOMContentLoaded', function () {
-
-
   var createButton = document.querySelector('#create');
 
   createButton.addEventListener('click', function () {
     createGraph();
   });
 
-  // Add checkbox container
-  var checkboxContainer = document.createElement('div');
-  checkboxContainer.style.marginTop = '10px';
-  checkboxContainer.style.display = 'none';
-  checkboxContainer.id = 'checkboxContainer';
-  
-  // Add checkbox
-  var checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.id = 'reverseData';
-  checkbox.style.marginRight = '8px';
-  checkbox.style.cursor = 'pointer';
-  
-  // Add label
-  var label = document.createElement('label');
-  label.htmlFor = 'reverseData';
-  label.textContent = 'Reverse Data';
-  label.style.color = '#fff';
-  label.style.cursor = 'pointer';
-  
-  // Add elements to container
-  checkboxContainer.appendChild(checkbox);
-  checkboxContainer.appendChild(label);
-  document.body.appendChild(checkboxContainer);
+  // Get the main container
+  var mainContainer = document.getElementById('mainContainer');
 
   // Add textarea for CSV data
   var textarea = document.createElement('textarea');
@@ -48,8 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
   textarea.style.borderRadius = '3px';
   textarea.style.boxSizing = 'border-box';
   textarea.placeholder = 'Paste your CSV data here...';
-  document.body.appendChild(textarea);
+  mainContainer.appendChild(textarea);
 
+  // Add checkbox container
+  var checkboxContainer = document.getElementById('reverseCheckboxContainer');
+
+  // Add checkbox
+  var checkbox = document.getElementById('reverseCheckbox');
+  checkbox.id = 'reverseData';
+  
   // Store original data
   var originalData = '';
 
@@ -71,27 +54,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Add import functionality
-  importButton.addEventListener('click', function() {
-    if (checkboxContainer.style.display === 'none') {
-      checkboxContainer.style.display = 'block';
-      originalData = ''; // Reset original data
-    } else {
-      var csvData = textarea.value;
-      var isReversed = checkbox.checked;
-      
-      console.log('CSV Data:', csvData);
-      console.log('Reversed:', isReversed);
-      // Here you can process the CSV data
-      
-      checkboxContainer.style.display = 'none';
-      textarea.value = ''; // Clear the textarea
-      checkbox.checked = false; // Reset checkbox
-      originalData = ''; // Reset original data
-    }
-  });
+  // Initialize the textarea
+  mainContainer.appendChild(textarea);
 
+  // Add elements to container
+  mainContainer.appendChild(checkboxContainer);
 });
+
+
 
 function loadColorPalette(paletteName) {
   return new Promise((resolve, reject) => {
@@ -146,6 +116,11 @@ async function createGraph() {
   const reverseData = document.getElementById('reverseData').checked;
   const colorPalette = document.getElementById('colorPaletteDropdown').value;
   const aspectRatio = document.getElementById('aspectRatioDropdown').value;
+  const graphTitle = document.getElementById('graphTitle').value;
+  const subTitle = document.getElementById('subTitle').value;
+  const sourceTitle = document.getElementById('sourceTitle').value;
+  const minVal = document.getElementById('minVal').value;
+  const maxVal = document.getElementById('maxVal').value;
   
   try {
     const paletteConfig = await loadColorPalette(colorPalette);
@@ -164,6 +139,11 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createColumnChart();';
         break;
@@ -176,6 +156,11 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createLineChart();';
         break;
@@ -188,6 +173,10 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createPieChart();';
         break;
@@ -200,6 +189,12 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createBarChart();';
         break;
@@ -212,6 +207,10 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createBarChartGrouped();';
         break;
@@ -224,6 +223,10 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createBarChartStacked();';
         break;
@@ -236,6 +239,10 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createColumnChartGrouped();';
         break;
@@ -248,6 +255,10 @@ async function createGraph() {
           'var reverseData = ' + reverseData + ';\n' +
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
+          'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
+          'var minVal = "' + minVal + '";\n' +
+          'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
           'createColumnChartStacked();';
         break;

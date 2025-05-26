@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!originalData) {
           originalData = textarea.value;
         }
-        // Reverse the data
-        var lines = originalData.split('\n');
+        // Reverse the data, filtering out empty lines
+        var lines = originalData.split('\n').filter(line => line.trim() !== '');
         textarea.value = lines.reverse().join('\n');
       } else {
         // Restore original data
@@ -174,6 +174,7 @@ async function createGraph() {
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
           'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
           'var minVal = "' + minVal + '";\n' +
           'var maxVal = "' + maxVal + '";\n' +
@@ -192,7 +193,6 @@ async function createGraph() {
           'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
           'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
           'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
-          'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
           'var minVal = "' + minVal + '";\n' +
           'var maxVal = "' + maxVal + '";\n' +
           'eval(scriptContent);\n' +
@@ -208,6 +208,7 @@ async function createGraph() {
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
           'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
           'var minVal = "' + minVal + '";\n' +
           'var maxVal = "' + maxVal + '";\n' +
@@ -224,6 +225,7 @@ async function createGraph() {
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
           'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
           'var minVal = "' + minVal + '";\n' +
           'var maxVal = "' + maxVal + '";\n' +
@@ -240,6 +242,7 @@ async function createGraph() {
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
           'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
           'var minVal = "' + minVal + '";\n' +
           'var maxVal = "' + maxVal + '";\n' +
@@ -256,6 +259,7 @@ async function createGraph() {
           'var colorPalette = ' + JSON.stringify(paletteConfig) + ';\n' +
           'var aspectRatio = ' + JSON.stringify(aspectRatioConfig) + ';\n' +
           'var graphTitle = "' + graphTitle.replace(/"/g, '\\"') + '";\n' +
+          'var subTitle = "' + subTitle.replace(/"/g, '\\"') + '";\n' +
           'var sourceTitle = "' + sourceTitle.replace(/"/g, '\\"') + '";\n' +
           'var minVal = "' + minVal + '";\n' +
           'var maxVal = "' + maxVal + '";\n' +

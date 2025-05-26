@@ -33,16 +33,30 @@ function createBarChart() {
             lines = lines.reverse();
         }
         
-        // Remove empty lines and count valid data rows
+        // Remove empty lines and process data rows
         var dataRows = lines.filter(function(line) {
             return line.trim() !== '';
         });
+
+        // Check for tab or comma delimiter
+        var delimiter = dataRows[0].indexOf('\t') !== -1 ? '\t' : ',';
         
-        var numBars = dataRows.length;
-        var barValues = dataRows.map(function(line) {
-            var values = line.split(',');
-            return parseFloat(values[0]) || 0; // Get first column value as number
+        var yAxisLabels = [];
+        var barValues = [];
+        
+        // Process each row
+        dataRows.forEach(function(row) {
+            var parts = row.split(delimiter);
+            if (parts.length >= 2) {
+                yAxisLabels.push(parts[0].trim()); // First column for labels
+                var value = parseFloat(parts[1]); // Second column for values
+                if (!isNaN(value)) {
+                    barValues.push(value);
+                }
+            }
         });
+
+        var numBars = barValues.length;
 
         var compName = "Bar Chart";
         var width = aspectRatio.width;
@@ -113,7 +127,12 @@ function createBarChart() {
     
         var dropdownYaxis = shapeController.property("ADBE Effect Parade").addProperty("ADBE Dropdown Control");
         var dropdownYaxisUpdate = dropdownYaxis.property(1).setPropertyParameters(["Waarde", "Woorden"]);
-        dropdownYaxisUpdate.setValue(2);
+        // Check if first column contains any non-numeric values
+        var hasWords = dataRows.some(function(row) {
+            var firstCol = row.split(delimiter)[0].trim();
+            return isNaN(parseFloat(firstCol));
+        });
+        dropdownYaxisUpdate.setValue(hasWords ? 2 : 1); // Set to "Woorden" (2) if words found, otherwise "Waarde" (1)
         dropdownYaxisUpdate.propertyGroup(1).name = "Y-As";
 
         var sliderMinVal = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
@@ -227,7 +246,6 @@ function createBarChart() {
         var textAnimator = xAxisText.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
         var textAnimatorProps = textAnimator.property("ADBE Text Animator Properties").addProperty("ADBE Text Line Spacing");
         textAnimatorProps.expression = "b = thisComp.layer(\"Controller\").effect(\"Lijnen - Lengte\")(\"Slider\")/(thisComp.layer(\"Controller\").effect(\"Lijnen - Aantal\")(\"Slider\")-1);y = value[1];var targetName = \"Balk\";var balkAantal = 0;\tfor (var i = 1; i <= thisComp.numLayers; i++) {\t\tif (thisComp.layer(i).name.indexOf(targetName) !== -1) {\t\t\tbalkAantal++;\t\t}\t}balkAantal;x = b;[x,y]";
-
         // Y AXIS TEXT
         var yAxisText = newComp.layers.addText();
         yAxisText.name = "Y-As";
@@ -252,7 +270,7 @@ function createBarChart() {
         yAxisText.property("Transform").property("Y Position").expression = "thisComp.layer(\"Balk 1\").transform.position[1]";
         yAxisText.property("Transform").property("Anchor Point").setValue([0, -11]);
 
-        yAxisText.property("Source Text").setValue("jan\nfeb");
+        yAxisText.property("Source Text").setValue(yAxisLabels.join('\n'));
         yAxisText.property("Source Text").expression = "var yAs = thisComp.layer(\"Controller\").effect(\"Y-As\")(\"Menu\").value;\nvar base = thisComp.layer(\"Controller\").effect(\"Y-As - Startgetal\")(\"Slider\");\nvar increment = thisComp.layer(\"Controller\").effect(\"Y-As - Toename\")(\"Slider\");\nvar step1 = thisComp.layer(\"Controller\").effect(\"Y-As - Stap overslaan na\")(\"Slider\");\nvar step2 = thisComp.layer(\"Controller\").effect(\"Y-As - Stap\")(\"Slider\");\nvar targetName = \"Balk\";\nvar balkAantal = 0;\n\tfor (var i = 1; i <= thisComp.numLayers; i++) {\n\t\tif (thisComp.layer(i).name.indexOf(targetName) !== -1) {\n\t\t\tbalkAantal++;\n\t\t}\n\t}balkAantal;\nvar aantalLabels = Math.ceil(balkAantal / step2);\nif (yAs === 1) {\n\tvar text = \"\";\n\t\tif (balkAantal > step1) {\n\t\t\tfor (var j = 0; j < aantalLabels; j++){\n\t\t\t\ttext += (base + (increment * step2 * j)).toString() + \"\\n\";\n\t\t\t}\n\t\t} else {\n\t\t\tfor (var i = 0; i < balkAantal; i++) { \n\t\t\t\ttext += (base + (increment * i)).toString() + \"\\n\";\n\t\t\t}\n\t\t}\n\ttext.trim(); \n} else {\n\tvar text = sourceText;\n}";
 
         var yAxisTextAnimator = yAxisText.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");

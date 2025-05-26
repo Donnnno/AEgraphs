@@ -33,16 +33,30 @@ function createColumnChart() {
             lines = lines.reverse();
         }
         
-        // Remove empty lines and count valid data rows
+        // Remove empty lines and process data rows
         var dataRows = lines.filter(function(line) {
             return line.trim() !== '';
         });
+
+        // Check for tab or comma delimiter
+        var delimiter = dataRows[0].indexOf('\t') !== -1 ? '\t' : ',';
         
-        var numBars = dataRows.length;
-        var barValues = dataRows.map(function(line) {
-            var values = line.split(',');
-            return parseFloat(values[0]) || 0; // Get first column value as number
+        var xAxisLabels = [];
+        var barValues = [];
+        
+        // Process each row
+        dataRows.forEach(function(row) {
+            var parts = row.split(delimiter);
+            if (parts.length >= 2) {
+                xAxisLabels.push(parts[0].trim()); // First column for labels
+                var value = parseFloat(parts[1]); // Second column for values
+                if (!isNaN(value)) {
+                    barValues.push(value);
+                }
+            }
         });
+
+        var numBars = barValues.length;
 
         var compName = "Bar Chart";
         var width = aspectRatio.width;
@@ -133,6 +147,12 @@ function createColumnChart() {
 
         var dropdownXaxis = shapeController.property("ADBE Effect Parade").addProperty("ADBE Dropdown Control");
         var dropdownXaxisUpdate = dropdownXaxis.property(1).setPropertyParameters(["Waarde", "Woorden"]);
+                // Check if first column contains any non-numeric values
+        var hasWords = dataRows.some(function(row) {
+            var firstCol = row.split(delimiter)[0].trim();
+            return isNaN(parseFloat(firstCol));
+        });
+        dropdownXaxisUpdate.setValue(hasWords ? 2 : 1); // Set to "Woorden" (2) if words found, otherwise "Waarde" (1)
         dropdownXaxisUpdate.propertyGroup(1).name = "X-As";
     
         var sliderStartNum = shapeController.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
@@ -218,6 +238,7 @@ function createColumnChart() {
         xAxisText.property("Transform").property("Y Position").setValue(55);
 
         // Set up text expression
+        xAxisText.property("Source Text").setValue(xAxisLabels.join('\n'));
         xAxisText.property("Source Text").expression = "const xAs = thisComp.layer(\"Controller\").effect(\"X-As\")(\"Menu\").value;\nconst base = thisComp.layer(\"Controller\").effect(\"X-As - Startgetal\")(\"Slider\");\nconst increment = thisComp.layer(\"Controller\").effect(\"X-As - Toename\")(\"Slider\");\nconst step1 = thisComp.layer(\"Controller\").effect(\"X-As - Stap overslaan na\")(\"Slider\");\nconst step2 = thisComp.layer(\"Controller\").effect(\"X-As - Stap\")(\"Slider\");\nconst targetName = \"Balk\";\nlet balkAantal = 0;\n\nfor (let i = 1; i <= thisComp.numLayers; i++) {\n    if (thisComp.layer(i).name.indexOf(targetName) !== -1) {\n        balkAantal++;\n    }\n}\nbalkAantal;\n\nlet aantalLabels = Math.ceil(balkAantal / step2);\n\nif (xAs === 1) {\n    var text = \"\";\n    \n    if (balkAantal > step1) {\n        for (var j = 0; j < aantalLabels; j++){\n            text += (base + (increment * step2 * j)).toString() + \"\\n\";\n        }\n    } else {\n        for (var i = 0; i < balkAantal; i++) { \n            text += (base + (increment * i)).toString() + \"\\n\";\n        }\n    }\n    text.trim();\n} else {\n    var text = sourceText;\n}";
 
         // Text animator

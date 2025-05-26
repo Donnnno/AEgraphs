@@ -58,7 +58,7 @@ function createLineChart() {
 
         var numBars = barValues.length;
 
-        var compName = "Line Chart";
+        var compName = "Line Chart" + (graphTitle ? " - " + graphTitle : "");
         var width = aspectRatio.width;
         var height = aspectRatio.height;
         var duration = 60;

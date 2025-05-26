@@ -58,7 +58,7 @@ function createColumnChart() {
 
         var numBars = barValues.length;
 
-        var compName = "Bar Chart";
+        var compName = "Column Chart" + (graphTitle ? " - " + graphTitle : "");
         var width = aspectRatio.width;
         var height = aspectRatio.height;
         var duration = 60;

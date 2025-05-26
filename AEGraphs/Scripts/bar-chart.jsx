@@ -58,7 +58,7 @@ function createBarChart() {
 
         var numBars = barValues.length;
 
-        var compName = "Bar Chart";
+        var compName = "Bar Chart" + (graphTitle ? " - " + graphTitle : "");
         var width = aspectRatio.width;
         var height = aspectRatio.height;
         var duration = 60;
